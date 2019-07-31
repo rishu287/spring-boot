@@ -1,9 +1,14 @@
-package com.rishu.java.spring.boot.hello;
+package com.rishu.java.spring.boot.controller;
 
 import com.rishu.java.spring.boot.service.MessageService;
 import com.rishu.java.spring.boot.model.Message;
 import java.util.List;
+
+import javax.xml.ws.Response;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,12 +40,19 @@ public class MessageResourceController {
 		return messageService.getMessage(messageId);
 	}
 
+	
 	@RequestMapping(value = "/PostMessages", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Message PostMessage(@RequestBody Message message) {
-		System.out.println(message.getAuthor());
+		System.out.println(message.getAuthor());		
 		return messageService.addMessage(message);
 	}
 
+	@RequestMapping(value = "/PostMessagesWithStatusCode", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity PostMessageWithStatusCode(@RequestBody Message message) {		
+		return new ResponseEntity<>(messageService.addMessage(message), HttpStatus.CREATED);
+	}
+	
+	
 	@RequestMapping(value = "/UpdateMessage/{messageId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public Message updateMessage(@PathVariable("messageId") long messageId, @RequestBody Message message) {
 		System.out.println(message.getMessageId());
